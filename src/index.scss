@@ -1,0 +1,30 @@
+body {
+  background: var(--tg-theme-secondary-bg-color, white);
+  padding: 0;
+  margin: 0;
+}
+
+.reset {
+  all: unset;
+}
+
+@font-face {
+  font-family: "Qanelas";
+  src: url("./assets/fonts/Qanelas-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Qanelas";
+  src: url("./assets/fonts/Qanelas-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Qanelas";
+  src: url("./assets/fonts/Qanelas-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}

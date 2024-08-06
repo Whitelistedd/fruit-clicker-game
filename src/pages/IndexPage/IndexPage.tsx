@@ -1,11 +1,19 @@
-import { Section, Cell, Image, List } from '@telegram-apps/telegram-ui';
+import { Section } from '@telegram-apps/telegram-ui';
+
+import styles from './IndexPage.module.scss';
+
 import type { FC } from 'react';
-
-import { Link } from '@/components/Link/Link.tsx';
-
-import tonSvg from './ton.svg';
-
 export const IndexPage: FC = () => {
+  return (
+    <Section className={styles.container}>
+      <div>
+        1
+      </div>
+    </Section>
+  )
+}
+
+/* export const IndexPage: FC = () => {
   return (
     <List>
       <Section
@@ -37,4 +45,4 @@ export const IndexPage: FC = () => {
       </Section>
     </List>
   );
-};
+ */

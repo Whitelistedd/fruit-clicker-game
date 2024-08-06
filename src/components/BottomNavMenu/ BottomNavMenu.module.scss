@@ -1,0 +1,53 @@
+@import "@/theme/colors.scss";
+
+.nav {
+    position: absolute;
+    width: -webkit-fill-available;
+    bottom: 0px;
+    padding: 0px 20px 30px 20px;
+    
+    
+    .list {
+        background-color: $bg;
+        width: 100%;
+        border-radius: 20px;
+        outline: 2px solid #400032;
+        padding: 25px 0px;
+        display: flex;
+        justify-content: space-evenly;
+        list-style: none;
+        align-items: center;
+    }
+
+    .listItem {
+        gap: 5px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 30%;
+    }
+
+    .listItemText {
+        font-family: Qanelas;
+        font-weight: 500;
+    }
+
+    .listItemActive {
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        opacity: 100%;
+        &::before {
+            content: "";
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            background-color: $wb1;
+            border-radius: 50%;
+            filter: blur(15px);
+        }
+        * {
+            z-index: 2;
+        }
+    }
+}
