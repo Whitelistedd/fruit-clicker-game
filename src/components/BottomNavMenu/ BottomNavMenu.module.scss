@@ -10,21 +10,44 @@
     .list {
         background-color: $bg;
         width: 100%;
-        border-radius: 20px;
-        outline: 2px solid #400032;
         padding: 25px 0px;
         display: flex;
         justify-content: space-evenly;
         list-style: none;
         align-items: center;
+        position: relative;
+        border-radius: 20px;
+        &::after {
+            position: absolute;
+            content: "";
+            width: 100%;
+            height: 100%;
+            background-color: $bg;
+            border-radius: 20px;
+            z-index: 2;
+        }
+        &::before {
+            position: absolute;
+            content: "";
+            width: 100%;
+            height: 100%;
+            padding: 2px;
+            border-radius: 20px;
+            z-index: 1;
+            background: linear-gradient(180deg, #400032 -16.13%, rgba(255, 255, 255, 0) 100%);
+            
+            
+        }
     }
 
     .listItem {
         gap: 5px;
         display: flex;
+        position: relative;
         flex-direction: column;
         align-items: center;
         opacity: 30%;
+        z-index: 3;
     }
 
     .listItemText {

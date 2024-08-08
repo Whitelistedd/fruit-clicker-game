@@ -1,1 +1,7 @@
-.container {}
+@import "@/theme/colors.scss";
+
+.container {
+    background-color: $bg;
+    min-height: 100vh;
+    width: 100%;
+}
