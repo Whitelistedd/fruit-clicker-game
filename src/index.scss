@@ -8,6 +8,11 @@ body {
   all: unset;
 }
 
+* {
+  box-sizing: border-box;
+  font-family: Qanelas;
+}
+
 @font-face {
   font-family: "Qanelas";
   src: url("./assets/fonts/Qanelas-Regular.ttf") format("truetype");
@@ -26,5 +31,12 @@ body {
   font-family: "Qanelas";
   src: url("./assets/fonts/Qanelas-Bold.ttf") format("truetype");
   font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Japanese 3017";
+  src: url("./assets/fonts/Japanese-3017.ttf") format("truetype");
+  font-weight: 500;
   font-style: normal;
 }
