@@ -1,7 +1,172 @@
 @import "@/theme/colors.scss";
 
 .container {
-    background-color: $bg;
-    min-height: 100vh;
+  background-color: $bg;
+  min-height: 100vh;
+  padding: 50px 20px;
+
+  .infoPills {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .topInfo {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+  }
+
+  .infoCountPill {
+    display: flex;
+    align-items: center;
+    padding: 12px 10px;
+    gap: 5px;
+    min-height: 60px;
+  }
+
+  .heroPill {
+    flex: 1.5;
+    font-weight: 700;
+    font-size: 0.75rem;
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      background: linear-gradient(91.7deg, #c00204 0%, #f83c27 99.37%);
+      width: 100%;
+      height: calc(100% - 21px);
+      left: -2px;
+      right: 0px;
+      bottom: -2px;
+      border-radius: 15px;
+      padding: 2px;
+      z-index: 2;
+    }
+  }
+
+  .heroPillWrap {
+    border: none !important;
+    background-position-y: 25%;
+    height: 100%;
+    z-index: 3;
+    position: relative;
+    overflow: hidden;
+    &::after {
+      content: "";
+      position: absolute;
+      background: url("@/assets/imgs/panda.png"),
+        url("@/assets/imgs/panda_bg.png") -15px;
+      background-repeat: no-repeat;
+      background-size: 130px;
+      width: 110px;
+      height: 90px;
+      top: -15%;
+      right: -5px;
+    }
+  }
+
+  .infoCount {
+    font-size: 1.75rem;
+    font-weight: 900;
+  }
+
+  .totalCoinsCounter {
+    justify-content: center;
+    padding: 19px 0px !important;
+    background: url("@/assets/imgs/purple_dash.png") no-repeat right;
+  }
+
+  .totalCoinsCount {
+    font-size: 3rem;
+    font-family: "Japanese 3017";
+  }
+
+  .bottomInfo {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+  }
+
+  .fruitPill {
+    flex: 2;
+  }
+
+  .fruitPillWrap {
+    font-size: 0.75rem;
+    font-weight: 700;
+    border: 2px solid #cb10ac !important;
+    background: $darkPurple !important;
+    position: relative;
+    overflow: hidden;
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      background: url("@/assets/imgs/grapefruit.png") no-repeat center;
+      background-size: 100px;
+      transform: rotate(-10deg);
+      right: 25px;
+      width: 51px;
+      height: 62px;
+      z-index: 3;
+    }
+    &::after {
+      transform: rotate(20deg);
+      right: 8px;
+      z-index: 2;
+      opacity: 50%;
+    }
+  }
+
+  .boostPill {
+    max-width: 97px;
+  }
+
+  .boostPillWrap {
+    min-height: 60px;
+    position: relative;
+    background: url("@/assets/imgs/purple_splash.png"),
+      linear-gradient(122.68deg, #cd00ff 7.08%, #12000c 95.07%);
+
+    background-size: 150%;
+    background-position-x: center;
+    background-position-y: center;
+    background-repeat: no-repeat;
+    box-shadow: 0px 0px 10px #95ffb3;
+    border: 2px solid #51ff14 !important;
+    &::after {
+      content: "";
+      position: absolute;
+      background: url("@/assets/imgs/rocket.png");
+      background-repeat: no-repeat;
+      width: 100%;
+      height: 80px;
+      background-size: 120%;
+      background-position-x: center;
+      background-position-y: center;
+      left: 0px;
+      bottom: -5px;
+    }
+  }
+
+  .mainFruitImage {
     width: 100%;
+    height: 100%;
+  }
+
+  .ComboTapCounter {
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.25rem;
+    width: 173.43px;
+    height: 128.24px;
+    background: url("@/assets/imgs/orange_splash.png") no-repeat;
+    background-size: 100%;
+    background-position-x: 15px;
+    font-family: "Japanese 3017";
+    transition: opacity 300ms ease;
+  }
 }

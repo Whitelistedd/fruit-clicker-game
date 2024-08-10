@@ -1,17 +1,87 @@
-import { Section } from '@telegram-apps/telegram-ui';
+import { Section } from "@telegram-apps/telegram-ui";
+import Coin from "@/assets/svgs/Coin.svg?react";
+import GrapeFruitSrc from "@/assets/imgs/grapefruit.png";
 
-import styles from './IndexPage.module.scss';
+import styles from "./IndexPage.module.scss";
 
-import type { FC } from 'react';
+import { useState, type FC } from "react";
+import { InfoPill } from "@/components/InfoPill";
 export const IndexPage: FC = () => {
+  const [screenTapPosition, setScreenTapPosition] = useState({ x: 0, y: 0 });
+  const [tapCombo, setTapCombo] = useState(0);
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+
+  const handleScreenTap = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    setScreenTapPosition({ x: e.pageX, y: e.pageY });
+    setTapCombo(tapCombo + 1);
+    timeoutId && clearTimeout(timeoutId);
+    const newTimeoutId = setTimeout(() => setTapCombo(0), 1000);
+    setTimeoutId(newTimeoutId);
+  };
+
   return (
-    <Section className={styles.container}>
-      <div>
-        1
+    <Section>
+      <div className={styles.container}>
+        <div className={styles.infoPills}>
+          <div className={styles.topInfo}>
+            <InfoPill
+              className={styles.heroPill}
+              wrapClassName={styles.heroPillWrap}
+              label="Hero"
+              labelRight="95%"
+            >
+              Panda
+            </InfoPill>
+            <InfoPill wrapClassName={styles.infoCountPill} label="Per hour">
+              <Coin />
+              <span className={styles.infoCount}>40k</span>
+            </InfoPill>
+            <InfoPill wrapClassName={styles.infoCountPill} label="Per tap">
+              <Coin />
+              <span className={styles.infoCount}>3k</span>
+            </InfoPill>
+          </div>
+          <InfoPill
+            wrapClassName={`${styles.totalCoinsCounter} ${styles.infoCountPill}`}
+          >
+            <Coin />
+            <span className={`${styles.totalCoinsCount} ${styles.infoCount}`}>
+              15.233.221
+            </span>
+          </InfoPill>
+          <div className={styles.bottomInfo}>
+            <InfoPill
+              className={styles.fruitPill}
+              wrapClassName={styles.fruitPillWrap}
+              label="Hero"
+              labelRight="95%"
+            >
+              Grape
+            </InfoPill>
+            <InfoPill
+              className={styles.boostPill}
+              wrapClassName={styles.boostPillWrap}
+              label="Boost"
+            ></InfoPill>
+          </div>
+        </div>
+        <div onClick={(e) => handleScreenTap(e)}>
+          <img className={styles.mainFruitImage} src={GrapeFruitSrc} />
+          <div
+            style={{
+              top: screenTapPosition.y - 64,
+              left: screenTapPosition.x - 86.5,
+              opacity: tapCombo ? 1 : 0,
+            }}
+            className={styles.ComboTapCounter}
+          >
+            +{tapCombo}
+          </div>
+        </div>
       </div>
     </Section>
-  )
-}
+  );
+};
 
 /* export const IndexPage: FC = () => {
   return (
