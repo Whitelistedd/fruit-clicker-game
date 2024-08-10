@@ -2,10 +2,10 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserState } from "./userSlice.types";
 
 const initialState: UserState = {
-  allTapsCounter: 0,
+  totalTapsCounter: 0,
   fruitType: "grapefruit",
   heroType: "panda",
-  perHour: 0,
+  perHour: 60,
   perTap: 1,
 };
 
@@ -15,7 +15,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setPerTap: (state, payload: PayloadAction<number>) => {
-      state.perTap = payload.payload;
+      state.totalTapsCounter += payload.payload;
     },
   },
 });

@@ -6,16 +6,28 @@ import styles from "./IndexPage.module.scss";
 
 import { useState, type FC } from "react";
 import { InfoPill } from "@/components/InfoPill";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { formatNumber } from "@/helpers/formatNumber";
+import { setPerTap } from "@/store/slices/user";
 export const IndexPage: FC = () => {
+  const { totalTapsCounter, perTap, perHour } = useAppSelector(
+    (state) => state.user
+  );
+  const dispatch = useAppDispatch();
   const [screenTapPosition, setScreenTapPosition] = useState({ x: 0, y: 0 });
   const [tapCombo, setTapCombo] = useState(0);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
   const handleScreenTap = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setScreenTapPosition({ x: e.pageX, y: e.pageY });
-    setTapCombo(tapCombo + 1);
+    setTapCombo((prev) => {
+      dispatch(setPerTap(1));
+      return prev + 1;
+    });
     timeoutId && clearTimeout(timeoutId);
-    const newTimeoutId = setTimeout(() => setTapCombo(0), 1000);
+    const newTimeoutId = setTimeout(() => {
+      setTapCombo(0);
+    }, 1000);
     setTimeoutId(newTimeoutId);
   };
 
@@ -34,11 +46,11 @@ export const IndexPage: FC = () => {
             </InfoPill>
             <InfoPill wrapClassName={styles.infoCountPill} label="Per hour">
               <Coin />
-              <span className={styles.infoCount}>40k</span>
+              <span className={styles.infoCount}>{formatNumber(perHour)}</span>
             </InfoPill>
             <InfoPill wrapClassName={styles.infoCountPill} label="Per tap">
               <Coin />
-              <span className={styles.infoCount}>3k</span>
+              <span className={styles.infoCount}>{perTap}</span>
             </InfoPill>
           </div>
           <InfoPill
@@ -46,7 +58,7 @@ export const IndexPage: FC = () => {
           >
             <Coin />
             <span className={`${styles.totalCoinsCount} ${styles.infoCount}`}>
-              15.233.221
+              {Number(totalTapsCounter).toLocaleString()}
             </span>
           </InfoPill>
           <div className={styles.bottomInfo}>
