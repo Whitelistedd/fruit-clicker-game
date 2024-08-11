@@ -3,11 +3,16 @@ import Coin from "@/assets/svgs/Coin.svg?react";
 
 import styles from "./IndexPage.module.scss";
 
-import { useState, type FC } from "react";
+import { useEffect, useState, type FC } from "react";
 import { InfoPill } from "@/components/InfoPill";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { formatNumber } from "@/helpers/formatNumber";
-import { setPerTap } from "@/store/slices/user";
+import {
+  reFillEnergy,
+  setBoostingStatus,
+  setPerTap,
+  setTap,
+} from "@/store/slices/user";
 import { fruits } from "@/constants/fruits";
 import { heroes } from "@/constants/heroes";
 import heroesBgSrc from "@/assets/imgs/panda_bg.png";
@@ -15,10 +20,19 @@ import { CapitalFirstLetter } from "@/helpers/CapitalFirstLetter";
 import { calculatePercentageDone } from "@/helpers/calculatePercentageDone";
 
 export const IndexPage: FC = () => {
-  const { totalTapsCounter, perTap, levels, heroType, fruitType } =
-    useAppSelector((state) => state.user);
+  const {
+    totalTapsCounter,
+    perTap,
+    levels,
+    energy,
+    maxEnergy,
+    heroType,
+    boosting,
+    fruitType,
+  } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const [screenTapPosition, setScreenTapPosition] = useState({ x: 0, y: 0 });
+  const [isRegenerating, setIsRegenerating] = useState(false);
   const [tapCombo, setTapCombo] = useState(0);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const fruitImg = fruits[fruitType].src;
@@ -34,17 +48,40 @@ export const IndexPage: FC = () => {
   ];
 
   const handleScreenTap = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    setIsRegenerating(false);
     setScreenTapPosition({ x: e.pageX, y: e.pageY });
     setTapCombo((prev) => prev + perTap);
-    dispatch(setPerTap(perTap));
+    dispatch(setTap(perTap));
     timeoutId && clearTimeout(timeoutId);
     const newTimeoutId = setTimeout(() => {
       setTapCombo(0);
+      setIsRegenerating(true);
     }, 1000);
     setTimeoutId(newTimeoutId);
   };
 
-  console.log(lastFruitLevel);
+  const handleBoosting = () => {
+    dispatch(setBoostingStatus(true));
+    dispatch(setPerTap(perTap * 2));
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (isRegenerating) dispatch(reFillEnergy());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isRegenerating]);
+
+  useEffect(() => {
+    if (!boosting) return;
+    const timeout = setTimeout(() => {
+      dispatch(setPerTap(perTap / 2));
+      dispatch(setBoostingStatus(false));
+    }, 5000);
+
+    return () => clearTimeout(timeout);
+  }, [boosting]);
 
   return (
     <Section>
@@ -84,7 +121,7 @@ export const IndexPage: FC = () => {
             <InfoPill
               className={styles.fruitPill}
               wrapClassName={styles.fruitPillWrap}
-              label="Fruit"
+              label={`Fruit Level: ${currentFruit.level} (Max: ${lastFruitLevel})`}
               labelRight={
                 nextLevelTapsNeeded
                   ? `${calculatePercentageDone(
@@ -93,8 +130,8 @@ export const IndexPage: FC = () => {
                     )}%`
                   : "MAX"
               }
-              bottomLeftLabel={`Level: ${currentFruit.level} (Max: ${lastFruitLevel})`}
-              bottomRightLabel={`Current fruit taps: ${currentFruit.taps}`}
+              bottomLeftLabel={`Energy: ${energy} (Max: ${maxEnergy})`}
+              bottomRightLabel={`fruit taps: ${currentFruit.taps}`}
             >
               {CapitalFirstLetter(fruitType)}
               <img
@@ -113,9 +150,12 @@ export const IndexPage: FC = () => {
               />
             </InfoPill>
             <InfoPill
+              onClick={() => handleBoosting()}
               className={styles.boostPill}
-              wrapClassName={styles.boostPillWrap}
-              label="Boost"
+              wrapClassName={`${boosting && styles.boostPillWrapActivated} ${
+                styles.boostPillWrap
+              }`}
+              label={boosting ? "Boosting" : "Boost"}
             ></InfoPill>
           </div>
         </div>

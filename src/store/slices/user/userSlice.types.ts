@@ -14,4 +14,7 @@ export type UserState = {
   perTap: number;
   levels: { [key: string]: { taps: number; current: number; level: number } };
   fruitType: fruitType;
+  energy: number;
+  maxEnergy: number;
+  boosting: boolean;
 };
