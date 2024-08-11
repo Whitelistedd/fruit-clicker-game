@@ -4,6 +4,8 @@ interface InfoPillProps extends React.HTMLAttributes<HTMLDivElement> {
   label?: string;
   labelRight?: string;
   wrapClassName?: string;
+  bottomRightLabel?: string;
+  bottomLeftLabel?: string;
 }
 
 export const InfoPill = ({
@@ -12,6 +14,8 @@ export const InfoPill = ({
   label,
   labelRight,
   wrapClassName,
+  bottomLeftLabel,
+  bottomRightLabel,
   ...props
 }: InfoPillProps) => {
   return (
@@ -21,6 +25,10 @@ export const InfoPill = ({
         <span>{labelRight}</span>
       </div>
       <div className={`${wrapClassName} ${styles.infoWrap}`}>{children}</div>
+      <div className={styles.topLabels}>
+        <span>{bottomLeftLabel}</span>
+        <span>{bottomRightLabel}</span>
+      </div>
     </div>
   );
 };

@@ -1,6 +1,5 @@
 import { Section } from "@telegram-apps/telegram-ui";
 import Coin from "@/assets/svgs/Coin.svg?react";
-import GrapeFruitSrc from "@/assets/imgs/grapefruit.png";
 
 import styles from "./IndexPage.module.scss";
 
@@ -9,27 +8,43 @@ import { InfoPill } from "@/components/InfoPill";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { formatNumber } from "@/helpers/formatNumber";
 import { setPerTap } from "@/store/slices/user";
+import { fruits } from "@/constants/fruits";
+import { heroes } from "@/constants/heroes";
+import heroesBgSrc from "@/assets/imgs/panda_bg.png";
+import { CapitalFirstLetter } from "@/helpers/CapitalFirstLetter";
+import { calculatePercentageDone } from "@/helpers/calculatePercentageDone";
+
 export const IndexPage: FC = () => {
-  const { totalTapsCounter, perTap, perHour } = useAppSelector(
-    (state) => state.user
-  );
+  const { totalTapsCounter, perTap, levels, heroType, fruitType } =
+    useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const [screenTapPosition, setScreenTapPosition] = useState({ x: 0, y: 0 });
   const [tapCombo, setTapCombo] = useState(0);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const fruitImg = fruits[fruitType].src;
+  const heroImg = heroes[heroType];
+
+  const currentFruit = levels[fruitType];
+
+  const nextLevelTapsNeeded =
+    fruits[fruitType]?.levels[levels?.[fruitType]?.level + 1]?.tapsNeeded;
+
+  const lastFruitLevel = Object.keys(fruits[fruitType].levels)[
+    Object.keys(fruits[fruitType].levels).length - 1
+  ];
 
   const handleScreenTap = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setScreenTapPosition({ x: e.pageX, y: e.pageY });
-    setTapCombo((prev) => {
-      dispatch(setPerTap(1));
-      return prev + 1;
-    });
+    setTapCombo((prev) => prev + perTap);
+    dispatch(setPerTap(perTap));
     timeoutId && clearTimeout(timeoutId);
     const newTimeoutId = setTimeout(() => {
       setTapCombo(0);
     }, 1000);
     setTimeoutId(newTimeoutId);
   };
+
+  console.log(lastFruitLevel);
 
   return (
     <Section>
@@ -40,13 +55,17 @@ export const IndexPage: FC = () => {
               className={styles.heroPill}
               wrapClassName={styles.heroPillWrap}
               label="Hero"
-              labelRight="95%"
+              labelRight={`${calculatePercentageDone(totalTapsCounter, 10)}`}
             >
-              Panda
+              {CapitalFirstLetter(heroType)}
+              <img className={styles.heroPillImgBg} src={heroesBgSrc} />
+              <img className={styles.heroPillImg} src={heroImg} />
             </InfoPill>
             <InfoPill wrapClassName={styles.infoCountPill} label="Per hour">
               <Coin />
-              <span className={styles.infoCount}>{formatNumber(perHour)}</span>
+              <span className={styles.infoCount}>
+                {formatNumber(perTap * 60)}
+              </span>
             </InfoPill>
             <InfoPill wrapClassName={styles.infoCountPill} label="Per tap">
               <Coin />
@@ -65,10 +84,33 @@ export const IndexPage: FC = () => {
             <InfoPill
               className={styles.fruitPill}
               wrapClassName={styles.fruitPillWrap}
-              label="Hero"
-              labelRight="95%"
+              label="Fruit"
+              labelRight={
+                nextLevelTapsNeeded
+                  ? `${calculatePercentageDone(
+                      currentFruit.current,
+                      nextLevelTapsNeeded
+                    )}%`
+                  : "MAX"
+              }
+              bottomLeftLabel={`Level: ${currentFruit.level} (Max: ${lastFruitLevel})`}
+              bottomRightLabel={`Current fruit taps: ${currentFruit.taps}`}
             >
-              Grape
+              {CapitalFirstLetter(fruitType)}
+              <img
+                className={styles.fruitPillImgLeft}
+                alt="fruit image"
+                src={fruitImg}
+                width={90}
+                height={101}
+              />
+              <img
+                className={styles.fruitPillImgRight}
+                alt="fruit image"
+                src={fruitImg}
+                width={90}
+                height={101}
+              />
             </InfoPill>
             <InfoPill
               className={styles.boostPill}
@@ -77,8 +119,12 @@ export const IndexPage: FC = () => {
             ></InfoPill>
           </div>
         </div>
-        <div onClick={(e) => handleScreenTap(e)}>
-          <img className={styles.mainFruitImage} src={GrapeFruitSrc} />
+        <div onClickCapture={(e) => handleScreenTap(e)}>
+          <img
+            className={styles.mainFruitImage}
+            alt="fruit image to click"
+            src={fruitImg}
+          />
           <div
             style={{
               top: screenTapPosition.y - 64,

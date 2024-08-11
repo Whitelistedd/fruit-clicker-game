@@ -78,18 +78,21 @@
     z-index: 3;
     position: relative;
     overflow: hidden;
-    &::after {
-      content: "";
-      position: absolute;
-      background: url("@/assets/imgs/panda.png"),
-        url("@/assets/imgs/panda_bg.png") -15px;
-      background-repeat: no-repeat;
-      background-size: 130px;
-      width: 110px;
-      height: 90px;
-      top: -15%;
-      right: -5px;
-    }
+  }
+
+  .heroPillImgBg,
+  .heroPillImg {
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: 130px;
+    width: 130px;
+    height: 90px;
+    top: -15%;
+    right: -15px;
+  }
+
+  .heroPillImg {
+    right: -25px;
   }
 
   .infoCount {
@@ -126,24 +129,21 @@
     background: $darkPurple !important;
     position: relative;
     overflow: hidden;
-    &::before,
-    &::after {
-      content: "";
-      position: absolute;
-      background: url("@/assets/imgs/grapefruit.png") no-repeat center;
-      background-size: 100px;
-      transform: rotate(-10deg);
-      right: 25px;
-      width: 51px;
-      height: 62px;
-      z-index: 3;
-    }
-    &::after {
-      transform: rotate(20deg);
-      right: 8px;
-      z-index: 2;
-      opacity: 50%;
-    }
+  }
+
+  .fruitPillImgLeft,
+  .fruitPillImgRight {
+    position: absolute;
+    transform: rotate(-10deg);
+    right: 8px;
+    z-index: 3;
+    top: -8px;
+  }
+  .fruitPillImgRight {
+    transform: scaleX(-1);
+    right: -5px;
+    z-index: 2;
+    opacity: 50%;
   }
 
   .boostPill {
@@ -180,6 +180,10 @@
   .mainFruitImage {
     width: 100%;
     height: 100%;
+    transition: 300ms ease;
+    &:active {
+      transform: scale(1.2);
+    }
   }
 
   .ComboTapCounter {
@@ -195,5 +199,6 @@
     background-position-x: 15px;
     font-family: "Japanese 3017";
     transition: opacity 300ms ease;
+    pointer-events: none;
   }
 }
