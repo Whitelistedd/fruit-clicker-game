@@ -11,7 +11,7 @@ export type heroType = "panda" | "monkey" | "tiger" | "snake";
 export type UserState = {
   totalTapsCounter: number;
   heroType: heroType;
-  perHour: number;
   perTap: number;
+  levels: { [key: string]: { taps: number; current: number; level: number } };
   fruitType: fruitType;
 };
