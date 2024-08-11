@@ -177,6 +177,10 @@
     }
   }
 
+  .boostPillWrapActivated {
+    filter: grayscale(100%);
+  }
+
   .mainFruitImage {
     width: 100%;
     height: 100%;
