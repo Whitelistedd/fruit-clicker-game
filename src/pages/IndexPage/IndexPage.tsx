@@ -1,4 +1,4 @@
-import {Image, Section} from "@telegram-apps/telegram-ui";
+import {Section} from "@telegram-apps/telegram-ui";
 import Coin from "@/assets/svgs/Coin.svg?react";
 
 import styles from "./IndexPage.module.scss";

@@ -18,7 +18,6 @@ import { BottomNavMenu } from "./BottomNavMenu";
 import {useAppDispatch, useAppSelector} from "@/store";
 import {setInitialInfo} from "@/store/slices/user";
 import {useGetFruitsQuery} from "@/store/slices/fruits";
-import {Loading} from "@/components/Loading/Index.tsx";
 import {fruitType} from "@/store/slices/fruits/fruits.types.ts";
 
 export const App: FC = () => {
@@ -27,9 +26,10 @@ export const App: FC = () => {
   const themeParams = useThemeParams();
   const viewport = useViewport();
   const dispatch = useAppDispatch();
-  const [loading,setLoading] = useState(true)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setLoading] = useState(true)
   const {main_fruit} = useAppSelector(state => state.user)
-  const {data, refetch} = useGetFruitsQuery({})
+  const {data} = useGetFruitsQuery({})
 
   useEffect(() => {
     return bindMiniAppCSSVars(miniApp, themeParams);
