@@ -3,12 +3,12 @@ import Coin from "@/assets/svgs/Coin.svg?react";
 
 import styles from "./IndexPage.module.scss";
 
-import React, {useMemo, useState, type FC, useRef} from "react";
+import React, {useMemo, useState, type FC, useRef, useEffect} from "react";
 import { InfoPill } from "@/components/InfoPill";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { formatNumber } from "@/helpers/formatNumber";
 import {
-  setBoostingStatus,
+  setBoostingStatus, setEnergy,
   setPerTap,
 } from "@/store/slices/user";
 import { CapitalFirstLetter } from "@/helpers/CapitalFirstLetter";
@@ -66,14 +66,14 @@ export const IndexPage: FC = () => {
     per_tap && dispatch(setPerTap(per_tap * 2));
   };
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     if (isRegenerating && !isNaN(energy))
-  //       dispatch(setEnergy({ type: "add" }));
-  //   }, 1000);
-  //
-  //   return () => clearInterval(interval);
-  // }, [isRegenerating,energy]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (isRegenerating && !isNaN(energy))
+        dispatch(setEnergy({ type: "add" }));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isRegenerating,energy]);
   //
   // useEffect(() => {
   //   if (!boosting || !per_tap) return;
