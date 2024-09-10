@@ -10,7 +10,6 @@ import { formatNumber } from "@/helpers/formatNumber";
 import {
   setBoostingStatus,
   setPerTap,
-  handleTap,
 } from "@/store/slices/user";
 import { CapitalFirstLetter } from "@/helpers/CapitalFirstLetter";
 import { calculatePercentageDone } from "@/helpers/calculatePercentageDone";
