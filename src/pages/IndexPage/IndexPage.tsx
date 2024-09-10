@@ -194,13 +194,13 @@ export const IndexPage: FC = () => {
 
             </div>
 
-            {/*<img*/}
-            {/*  className={styles.mainFruitImage}*/}
-            {/*  alt="fruit image to click"*/}
-            {/*  src={"https://i.ibb.co/2PqKs2D/te-1.webp"}*/}
-            {/*  fetchPriority={"high"}*/}
-            {/*  loading={"lazy"}*/}
-            {/*/>*/}
+            <img
+              className={styles.mainFruitImage}
+              alt="fruit image to click"
+              src={"https://i.ibb.co/2PqKs2D/te-1.webp"}
+              fetchPriority={"high"}
+              loading={"lazy"}
+            />
           </div>
             <div
               style={{
