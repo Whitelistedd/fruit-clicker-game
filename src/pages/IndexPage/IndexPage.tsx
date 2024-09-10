@@ -190,9 +190,9 @@ export const IndexPage: FC = () => {
           </div>
           <div className={styles.fruitContainer} onClickCapture={(e) => handleScreenTap(e)}>
             {/*{main_fruit?.color && <Splash className={styles.fruitSplash} color={main_fruit?.color}/>}*/}
-            <div className={styles.mainFruitImage}>
+            {/*<div className={styles.mainFruitImage}>*/}
 
-            </div>
+            {/*</div>*/}
 
             <img
               className={styles.mainFruitImage}
