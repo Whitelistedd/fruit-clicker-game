@@ -1,9 +1,7 @@
-import BoxSearch from '@/assets/svgs/BoxSearch.svg?react';
 import Clipboard from '@/assets/svgs/ClipBoard.svg?react';
 import Home from '@/assets/svgs/Home.svg?react';
 import TwoPerson from '@/assets/svgs/TwoPerson.svg?react';
 import { Link } from '@/components/Link/Link';
-import { useMemo } from 'react';
 
 import styles from './ BottomNavMenu.module.scss';
 
@@ -19,28 +17,22 @@ export const BottomNavMenu = () => {
         <nav className={styles.nav}>
             <ul className={`${styles.list} reset`}>
                 <li>
-                <Link className={`reset ${styles.listItem} ${currentUrl.href === getUrlHref("/#").href && styles.listItemActive}`} to='/'>
-                    <Home />
-                    <span className={styles.listItemText}>Home</span>
-                </Link>
+                    <Link className={`reset ${styles.listItem} ${currentUrl.href === getUrlHref("/#").href && styles.listItemActive}`} to='/'>
+                        <Home />
+                        <span className={styles.listItemText}>Home</span>
+                    </Link>
                 </li>
                 <li >
-                <Link className={`reset ${styles.listItem} ${currentUrl.href === getUrlHref("/#cards").href  && styles.listItemActive}`} to='/cards'>
-                    <Clipboard />
-                    <span className={styles.listItemText}>Cards</span>
-                </Link>
+                    <Link className={`reset ${styles.listItem} ${currentUrl.href === getUrlHref("/#cards").href  && styles.listItemActive}`} to='/cards'>
+                        <Clipboard />
+                        <span className={styles.listItemText}>Cards</span>
+                    </Link>
                 </li>
                 <li >
-                <Link className={`reset ${styles.listItem} ${currentUrl.href === getUrlHref("/#earn").href  && styles.listItemActive}`} to='/earn'>
-                    <BoxSearch />
-                    <span className={styles.listItemText}>Earn</span>
-                </Link>
-                </li>
-                <li >
-                <Link className={`reset ${styles.listItem} ${currentUrl.href === getUrlHref("/#friends").href  && styles.listItemActive}`} to='/friends'>
-                    <TwoPerson />
-                    <span className={styles.listItemText}>Friends</span>
-                </Link>
+                    <Link className={`reset ${styles.listItem} ${currentUrl.href === getUrlHref("/#friends").href  && styles.listItemActive}`} to='/friends'>
+                        <TwoPerson />
+                        <span className={styles.listItemText}>Friends</span>
+                    </Link>
                 </li>
             </ul>
         </nav>
