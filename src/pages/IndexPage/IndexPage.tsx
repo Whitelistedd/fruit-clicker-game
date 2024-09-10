@@ -3,7 +3,7 @@ import Coin from "@/assets/svgs/Coin.svg?react";
 
 import styles from "./IndexPage.module.scss";
 
-import React, { useMemo, useState, type FC } from "react";
+import React, {useMemo, useState, type FC, useRef} from "react";
 import { InfoPill } from "@/components/InfoPill";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { formatNumber } from "@/helpers/formatNumber";
@@ -29,9 +29,8 @@ export const IndexPage: FC = () => {
   } = useAppSelector((state) => state.user);
 
   const dispatch = useAppDispatch();
-  const [screenTapPosition, setScreenTapPosition] = useState({ x: 0, y: 0 });
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setIsRegenerating] = useState(false);
+  const clicksRef = useRef({ x: 0, y: 0 });
+  const isRegenerating = useRef(false)
   const [tapCombo, setTapCombo] = useState(0);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const fruitImg = `${main_fruit?.src}`;
@@ -47,17 +46,17 @@ export const IndexPage: FC = () => {
   );
 
   const lastFruitLevel = fruitLevelNumbers[fruitLevelNumbers.length - 1];
-  console.log(screenTapPosition)
+  console.log(clicksRef)
   const handleScreenTap = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if(energy <= 0) return
-    setIsRegenerating(false);
-    setScreenTapPosition({ x: e.pageX, y: e.pageY });
+    isRegenerating.current = false;
+    clicksRef.current = { x: e.pageX, y: e.pageY };
     per_tap && setTapCombo((prev) => prev + per_tap);
     dispatch(handleTap());
     timeoutId && clearTimeout(timeoutId);
     const newTimeoutId = setTimeout(() => {
       setTapCombo(0);
-      setIsRegenerating(true);
+      isRegenerating.current = true;
     }, 1000);
     setTimeoutId(newTimeoutId);
   };
@@ -205,8 +204,8 @@ export const IndexPage: FC = () => {
           </div>
             <div
               style={{
-                top: screenTapPosition.y - 64,
-                left: screenTapPosition.x - 86.5,
+                top: clicksRef.current.y - 64,
+                left: clicksRef.current.x - 86.5,
                 opacity: tapCombo ? 1 : 0,
               }}
               className={styles.ComboTapCounter}
