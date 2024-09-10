@@ -6,6 +6,7 @@ interface InfoPillProps extends React.HTMLAttributes<HTMLDivElement> {
   wrapClassName?: string;
   bottomRightLabel?: string;
   bottomLeftLabel?: string;
+  wrapProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
 export const InfoPill = ({
@@ -16,6 +17,7 @@ export const InfoPill = ({
   wrapClassName,
   bottomLeftLabel,
   bottomRightLabel,
+  wrapProps,
   ...props
 }: InfoPillProps) => {
   return (
@@ -24,11 +26,11 @@ export const InfoPill = ({
         <span>{label}</span>
         <span>{labelRight}</span>
       </div>
-      <div className={`${wrapClassName} ${styles.infoWrap}`}>{children}</div>
-      <div className={styles.topLabels}>
-        <span>{bottomLeftLabel}</span>
-        <span>{bottomRightLabel}</span>
-      </div>
+      <div {...wrapProps} className={wrapClassName || styles.infoWrap}>{children}</div>
+        {(bottomLeftLabel || bottomRightLabel) && <div className={styles.topLabels}>
+            <span>{bottomLeftLabel}</span>
+            <span>{bottomRightLabel}</span>
+        </div>}
     </div>
   );
 };

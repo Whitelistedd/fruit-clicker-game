@@ -3,55 +3,60 @@ import Coin from "@/assets/svgs/Coin.svg?react";
 
 import styles from "./IndexPage.module.scss";
 
-import { useEffect, useState, type FC } from "react";
+import React, { useEffect, useMemo, useState, type FC } from "react";
 import { InfoPill } from "@/components/InfoPill";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { formatNumber } from "@/helpers/formatNumber";
 import {
-  reFillEnergy,
   setBoostingStatus,
+  setEnergy,
   setPerTap,
-  setTap,
+  handleTap, setBoostCooldown,
 } from "@/store/slices/user";
-import { fruits } from "@/constants/fruits";
-import { heroes } from "@/constants/heroes";
-import heroesBgSrc from "@/assets/imgs/panda_bg.png";
 import { CapitalFirstLetter } from "@/helpers/CapitalFirstLetter";
 import { calculatePercentageDone } from "@/helpers/calculatePercentageDone";
+import Splash from "@/assets/svgs/Splash.tsx";
+import Dash from "@/assets/svgs/Dash.svg.tsx";
 
 export const IndexPage: FC = () => {
   const {
-    totalTapsCounter,
-    perTap,
-    levels,
     energy,
-    maxEnergy,
-    heroType,
+    main_fruit,
+    per_tap,
     boosting,
-    fruitType,
+    main_fruit_stats,
+    max_energy,
+    boostCoolDown,
+    total_taps_counter,
   } = useAppSelector((state) => state.user);
+
   const dispatch = useAppDispatch();
   const [screenTapPosition, setScreenTapPosition] = useState({ x: 0, y: 0 });
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [tapCombo, setTapCombo] = useState(0);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
-  const fruitImg = fruits[fruitType].src;
-  const heroImg = heroes[heroType];
-
-  const currentFruit = levels[fruitType];
+  const fruitImg = `${main_fruit?.src}`;
 
   const nextLevelTapsNeeded =
-    fruits[fruitType]?.levels[levels?.[fruitType]?.level + 1]?.tapsNeeded;
+    main_fruit?.levels &&
+    main_fruit_stats?.level &&
+    main_fruit?.levels[main_fruit_stats?.level + 1]?.taps_needed;
 
-  const lastFruitLevel = Object.keys(fruits[fruitType].levels)[
-    Object.keys(fruits[fruitType].levels).length - 1
-  ];
+  const fruitLevelNumbers = useMemo(
+    () => (main_fruit?.levels ? Object.keys(main_fruit?.levels) : []),
+    [main_fruit?.levels]
+  );
+
+  const lastFruitLevel = fruitLevelNumbers[fruitLevelNumbers.length - 1];
+
+    console.log(isRegenerating)
 
   const handleScreenTap = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if(energy <= 0) return
     setIsRegenerating(false);
     setScreenTapPosition({ x: e.pageX, y: e.pageY });
-    setTapCombo((prev) => prev + perTap);
-    dispatch(setTap(perTap));
+    per_tap && setTapCombo((prev) => prev + per_tap);
+    dispatch(handleTap());
     timeoutId && clearTimeout(timeoutId);
     const newTimeoutId = setTimeout(() => {
       setTapCombo(0);
@@ -61,156 +66,135 @@ export const IndexPage: FC = () => {
   };
 
   const handleBoosting = () => {
+    if(boosting || boostCoolDown) return
     dispatch(setBoostingStatus(true));
-    dispatch(setPerTap(perTap * 2));
+    per_tap && dispatch(setPerTap(per_tap * 2));
   };
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (isRegenerating) dispatch(reFillEnergy());
+      if (isRegenerating && !isNaN(energy))
+        dispatch(setEnergy({ type: "add" }));
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isRegenerating]);
+  }, [isRegenerating,energy]);
 
   useEffect(() => {
-    if (!boosting) return;
+    if (!boosting || !per_tap) return;
     const timeout = setTimeout(() => {
-      dispatch(setPerTap(perTap / 2));
+      dispatch(setPerTap(per_tap / 2));
+      dispatch(setBoostCooldown(true));
       dispatch(setBoostingStatus(false));
+      setTimeout(() => {
+        dispatch(setBoostCooldown(false));
+      }, 10000);
     }, 5000);
 
     return () => clearTimeout(timeout);
-  }, [boosting]);
+  }, [boosting,per_tap]);
+
+  console.log(main_fruit)
 
   return (
     <Section>
       <div className={styles.container}>
-        <div className={styles.infoPills}>
-          <div className={styles.topInfo}>
+        <div className={styles.wrap}>
+          <div className={styles.infoPills}>
+            <div className={styles.topInfo}>
+              {/*<InfoPill*/}
+              {/*  className={styles.heroPill}*/}
+              {/*  wrapClassName={styles.heroPillWrap}*/}
+              {/*  label="Hero"*/}
+              {/*  labelRight={`${calculatePercentageDone(total_taps_counter, 10)}`}*/}
+              {/*>*/}
+              {/*  <span className={styles.heroPillTitle}>{main_fruit?.name && CapitalFirstLetter(main_fruit?.name)}</span>*/}
+              {/*  <img className={styles.heroPillImgBg} src={heroesBgSrc} />*/}
+              {/*  <img className={styles.heroPillImg} src={heroImg} />*/}
+              {/*</InfoPill>*/}
+              <InfoPill wrapClassName={styles.infoCountPill} label="Per hour">
+                <Coin />
+                <span className={styles.infoCount}>
+                  {formatNumber(per_tap * 60)}
+                </span>
+              </InfoPill>
+              <InfoPill wrapClassName={styles.infoCountPill} label="Per tap">
+                <Coin />
+                <span className={styles.infoCount}>{per_tap}</span>
+              </InfoPill>
+            </div>
             <InfoPill
-              className={styles.heroPill}
-              wrapClassName={styles.heroPillWrap}
-              label="Hero"
-              labelRight={`${calculatePercentageDone(totalTapsCounter, 10)}`}
+              wrapClassName={`${styles.totalCoinsCounter} ${styles.infoCountPill}`}
             >
-              {CapitalFirstLetter(heroType)}
-              <img className={styles.heroPillImgBg} src={heroesBgSrc} />
-              <img className={styles.heroPillImg} src={heroImg} />
-            </InfoPill>
-            <InfoPill wrapClassName={styles.infoCountPill} label="Per hour">
               <Coin />
-              <span className={styles.infoCount}>
-                {formatNumber(perTap * 60)}
+              <span className={`${styles.totalCoinsCount} ${styles.infoCount}`}>
+                {Number(total_taps_counter).toLocaleString()}
               </span>
+              {main_fruit?.color && <Dash color={main_fruit?.color} className={styles.totalCoinsDash}/>}
             </InfoPill>
-            <InfoPill wrapClassName={styles.infoCountPill} label="Per tap">
-              <Coin />
-              <span className={styles.infoCount}>{perTap}</span>
-            </InfoPill>
+            <div className={styles.bottomInfo}>
+              <InfoPill
+                wrapProps={{style: {borderColor: main_fruit?.color}}}
+                className={styles.fruitPill}
+                wrapClassName={styles.fruitPillWrap}
+                label={`Fruit Level: ${main_fruit_stats.level} (Max: ${lastFruitLevel})`}
+                labelRight={
+                  main_fruit_stats?.current !== null && nextLevelTapsNeeded
+                    ? `${calculatePercentageDone(
+                        main_fruit_stats?.current,
+                        nextLevelTapsNeeded
+                      )}%`
+                    : "MAX"
+                }
+                bottomLeftLabel={`Energy: ${energy} (Max: ${max_energy})`}
+                bottomRightLabel={`fruit taps: ${main_fruit_stats.taps}`}
+              >
+                {main_fruit?.name && CapitalFirstLetter(main_fruit?.name)}
+                <img
+                  className={styles.fruitPillImgLeft}
+                  alt="fruit image"
+                  src={fruitImg}
+                  width={90}
+                  height={101}
+                />
+                <img
+                  className={styles.fruitPillImgRight}
+                  alt="fruit image"
+                  src={fruitImg}
+                  width={90}
+                  height={101}
+                />
+              </InfoPill>
+              <InfoPill
+                onClick={() => handleBoosting()}
+                className={styles.boostPill}
+                wrapClassName={`${(boosting || boostCoolDown) && styles.boostPillWrapActivated} ${
+                  styles.boostPillWrap
+                }`}
+                label={boostCoolDown ? "Coolingdown" : boosting ? "Boosting" : "Boost"}
+              ></InfoPill>
+            </div>
           </div>
-          <InfoPill
-            wrapClassName={`${styles.totalCoinsCounter} ${styles.infoCountPill}`}
-          >
-            <Coin />
-            <span className={`${styles.totalCoinsCount} ${styles.infoCount}`}>
-              {Number(totalTapsCounter).toLocaleString()}
-            </span>
-          </InfoPill>
-          <div className={styles.bottomInfo}>
-            <InfoPill
-              className={styles.fruitPill}
-              wrapClassName={styles.fruitPillWrap}
-              label={`Fruit Level: ${currentFruit.level} (Max: ${lastFruitLevel})`}
-              labelRight={
-                nextLevelTapsNeeded
-                  ? `${calculatePercentageDone(
-                      currentFruit.current,
-                      nextLevelTapsNeeded
-                    )}%`
-                  : "MAX"
-              }
-              bottomLeftLabel={`Energy: ${energy} (Max: ${maxEnergy})`}
-              bottomRightLabel={`fruit taps: ${currentFruit.taps}`}
+          <div className={styles.fruitContainer} onClickCapture={(e) => handleScreenTap(e)}>
+            {main_fruit?.color && <Splash className={styles.fruitSplash} color={main_fruit?.color}/>}
+            <img
+              className={styles.mainFruitImage}
+              alt="fruit image to click"
+              src={fruitImg}
+            />
+          </div>
+            <div
+              style={{
+                top: screenTapPosition.y - 64,
+                left: screenTapPosition.x - 86.5,
+                opacity: tapCombo ? 1 : 0,
+              }}
+              className={styles.ComboTapCounter}
             >
-              {CapitalFirstLetter(fruitType)}
-              <img
-                className={styles.fruitPillImgLeft}
-                alt="fruit image"
-                src={fruitImg}
-                width={90}
-                height={101}
-              />
-              <img
-                className={styles.fruitPillImgRight}
-                alt="fruit image"
-                src={fruitImg}
-                width={90}
-                height={101}
-              />
-            </InfoPill>
-            <InfoPill
-              onClick={() => handleBoosting()}
-              className={styles.boostPill}
-              wrapClassName={`${boosting && styles.boostPillWrapActivated} ${
-                styles.boostPillWrap
-              }`}
-              label={boosting ? "Boosting" : "Boost"}
-            ></InfoPill>
-          </div>
-        </div>
-        <div onClickCapture={(e) => handleScreenTap(e)}>
-          <img
-            className={styles.mainFruitImage}
-            alt="fruit image to click"
-            src={fruitImg}
-          />
-          <div
-            style={{
-              top: screenTapPosition.y - 64,
-              left: screenTapPosition.x - 86.5,
-              opacity: tapCombo ? 1 : 0,
-            }}
-            className={styles.ComboTapCounter}
-          >
-            +{tapCombo}
-          </div>
+              +{tapCombo}
+            </div>
         </div>
       </div>
     </Section>
   );
 };
-
-/* export const IndexPage: FC = () => {
-  return (
-    <List>
-      <Section
-        header='Features'
-        footer='You can use these pages to learn more about features, provided by Telegram Mini Apps and other useful projects'
-      >
-        <Link to='/ton-connect'>
-          <Cell
-            before={<Image src={tonSvg} style={{ backgroundColor: '#007AFF' }}/>}
-            subtitle='Connect your TON wallet'
-          >
-            TON Connect
-          </Cell>
-        </Link>
-      </Section>
-      <Section
-        header='Application Launch Data'
-        footer='These pages help developer to learn more about current launch information'
-      >
-        <Link to='/init-data'>
-          <Cell subtitle='User data, chat information, technical data'>Init Data</Cell>
-        </Link>
-        <Link to='/launch-params'>
-          <Cell subtitle='Platform identifier, Mini Apps version, etc.'>Launch Parameters</Cell>
-        </Link>
-        <Link to='/theme-params'>
-          <Cell subtitle='Telegram application palette information'>Theme Parameters</Cell>
-        </Link>
-      </Section>
-    </List>
-  );
- */
