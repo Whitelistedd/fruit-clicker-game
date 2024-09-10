@@ -1,6 +1,6 @@
 import {Section} from '@telegram-apps/telegram-ui';
 
-import {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import styles from "@/pages/Cards/Cards.module.scss";
 import {InfoPill} from "@/components/InfoPill";
 import {formatNumber} from "@/helpers/formatNumber.ts";
@@ -11,6 +11,7 @@ import {FruitCard} from "@/components/FruitCard";
 import {ActionModal} from "@/components/ActionModal/Index.tsx";
 import {setMainFruit, setUserFruitLevels} from "@/store/slices/user";
 import {fruitType} from "@/store/slices/fruits/fruits.types.ts";
+import Dash from "@/assets/svgs/Dash.svg.tsx";
 
 export const Cards: FC = () => {
   const {
@@ -93,7 +94,8 @@ export const Cards: FC = () => {
                             >
                                 <Coin/>
                                 <span className={`${styles.totalCoinsCount} ${styles.infoCount}`}>
-                              {Number(total_taps_counter).toLocaleString()}
+                              {main_fruit?.color && <Dash color={main_fruit?.color} className={styles.totalCoinsDash}/>}
+                                    {Number(total_taps_counter).toLocaleString()}
                             </span>
                             </InfoPill>
                             <InfoPill wrapClassName={styles.infoCountPill} label="Per hour">

@@ -35,14 +35,22 @@
     font-weight: 900;
   }
 
+  .totalCoinsDash {
+    position: absolute;
+    right: -10px;
+  }
+
   .totalCoinsCounter {
     flex: 2;
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
   }
 
   .totalCoinsCounterWrap {
     @extend .infoWrap;
+    overflow: hidden;
     justify-content: flex-start;
-    background: url("@/assets/imgs/purple_dash.png") no-repeat right;
     background-color: $transulasntPurple;
     background-size: contain;
     flex: 4;
