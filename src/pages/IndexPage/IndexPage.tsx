@@ -3,15 +3,14 @@ import Coin from "@/assets/svgs/Coin.svg?react";
 
 import styles from "./IndexPage.module.scss";
 
-import React, { useEffect, useMemo, useState, type FC } from "react";
+import React, { useMemo, useState, type FC } from "react";
 import { InfoPill } from "@/components/InfoPill";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { formatNumber } from "@/helpers/formatNumber";
 import {
   setBoostingStatus,
-  setEnergy,
   setPerTap,
-  handleTap, setBoostCooldown,
+  handleTap,
 } from "@/store/slices/user";
 import { CapitalFirstLetter } from "@/helpers/CapitalFirstLetter";
 import { calculatePercentageDone } from "@/helpers/calculatePercentageDone";
@@ -31,7 +30,8 @@ export const IndexPage: FC = () => {
 
   const dispatch = useAppDispatch();
   const [screenTapPosition, setScreenTapPosition] = useState({ x: 0, y: 0 });
-  const [isRegenerating, setIsRegenerating] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setIsRegenerating] = useState(false);
   const [tapCombo, setTapCombo] = useState(0);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const fruitImg = `${main_fruit?.src}`;
@@ -68,47 +68,47 @@ export const IndexPage: FC = () => {
     per_tap && dispatch(setPerTap(per_tap * 2));
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (isRegenerating && !isNaN(energy))
-        dispatch(setEnergy({ type: "add" }));
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [isRegenerating,energy]);
-
-  useEffect(() => {
-    if (!boosting || !per_tap) return;
-    const timeout = setTimeout(() => {
-      dispatch(setPerTap(per_tap / 2));
-      dispatch(setBoostCooldown(true));
-      dispatch(setBoostingStatus(false));
-      setTimeout(() => {
-        dispatch(setBoostCooldown(false));
-      }, 10000);
-    }, 5000);
-
-    return () => clearTimeout(timeout);
-  }, [boosting,per_tap]);
-
-  useEffect(() => {
-    if(energy < max_energy) {
-      setIsRegenerating(true)
-    }
-  },[])
-
-  useEffect(() => {
-    if(boosting) {
-      dispatch(setBoostCooldown(true));
-      dispatch(setBoostingStatus(false));
-      setTimeout(() => {
-        dispatch(setBoostCooldown(false));
-      }, 10000);
-    }
-    if(boostCoolDown) {
-      dispatch(setBoostCooldown(false));
-    }
-  }, [main_fruit]);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     if (isRegenerating && !isNaN(energy))
+  //       dispatch(setEnergy({ type: "add" }));
+  //   }, 1000);
+  //
+  //   return () => clearInterval(interval);
+  // }, [isRegenerating,energy]);
+  //
+  // useEffect(() => {
+  //   if (!boosting || !per_tap) return;
+  //   const timeout = setTimeout(() => {
+  //     dispatch(setPerTap(per_tap / 2));
+  //     dispatch(setBoostCooldown(true));
+  //     dispatch(setBoostingStatus(false));
+  //     setTimeout(() => {
+  //       dispatch(setBoostCooldown(false));
+  //     }, 10000);
+  //   }, 5000);
+  //
+  //   return () => clearTimeout(timeout);
+  // }, [boosting,per_tap]);
+  //
+  // useEffect(() => {
+  //   if(energy < max_energy) {
+  //     setIsRegenerating(true)
+  //   }
+  // },[])
+  //
+  // useEffect(() => {
+  //   if(boosting) {
+  //     dispatch(setBoostCooldown(true));
+  //     dispatch(setBoostingStatus(false));
+  //     setTimeout(() => {
+  //       dispatch(setBoostCooldown(false));
+  //     }, 10000);
+  //   }
+  //   if(boostCoolDown) {
+  //     dispatch(setBoostCooldown(false));
+  //   }
+  // }, [main_fruit]);
 
   return (
     <Section>
