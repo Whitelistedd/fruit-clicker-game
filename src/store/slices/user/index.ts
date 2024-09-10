@@ -96,7 +96,10 @@ export const userSlice = createSlice({
       const new_main_fruit_stats = state.user_fruit_levels.find(fruit => fruit.fruit_id === payload.payload.id)
       if(!new_main_fruit_stats) return console.log("Not Unlocked")
       state.main_fruit = payload.payload
+      state.user_fruit_levels = state.user_fruit_levels.map(fruit => fruit.fruit_id === payload.payload.id ? state.main_fruit_stats : fruit)
       state.main_fruit_stats = new_main_fruit_stats
+      if(new_main_fruit_stats?.level && payload?.payload?.levels)
+        state.per_tap = payload?.payload?.levels[new_main_fruit_stats?.level].taps_per_tap
     },
     setPerTap: (state, payload: PayloadAction<number>) => {
       state.per_tap = payload.payload;

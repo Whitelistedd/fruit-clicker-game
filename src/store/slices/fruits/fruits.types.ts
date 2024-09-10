@@ -10,4 +10,5 @@ export type fruitType = {
   name: string | null;
   color: string;
   src: string | null;
+  price: number;
 };
