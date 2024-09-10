@@ -29,7 +29,7 @@ export const App: FC = () => {
   const dispatch = useAppDispatch();
   const [loading,setLoading] = useState(true)
   const {main_fruit} = useAppSelector(state => state.user)
-  const {data} = useGetFruitsQuery({})
+  const {data, refetch} = useGetFruitsQuery({})
 
   useEffect(() => {
     return bindMiniAppCSSVars(miniApp, themeParams);
@@ -90,8 +90,6 @@ export const App: FC = () => {
     }))
     setLoading(false)
   },[data])
-
-  if(loading) return <Loading />
 
   return (
     <AppRoot

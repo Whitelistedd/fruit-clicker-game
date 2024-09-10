@@ -1,4 +1,4 @@
-import { Section } from "@telegram-apps/telegram-ui";
+import {Image, Section} from "@telegram-apps/telegram-ui";
 import Coin from "@/assets/svgs/Coin.svg?react";
 
 import styles from "./IndexPage.module.scss";
@@ -48,8 +48,6 @@ export const IndexPage: FC = () => {
   );
 
   const lastFruitLevel = fruitLevelNumbers[fruitLevelNumbers.length - 1];
-
-    console.log(main_fruit_stats, nextLevelTapsNeeded)
 
   const handleScreenTap = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if(energy <= 0) return
@@ -197,7 +195,9 @@ export const IndexPage: FC = () => {
             <img
               className={styles.mainFruitImage}
               alt="fruit image to click"
-              src={fruitImg}
+              src={"https://i.ibb.co/2PqKs2D/te-1.webp"}
+              fetchPriority={"high"}
+              loading={"lazy"}
             />
           </div>
             <div
