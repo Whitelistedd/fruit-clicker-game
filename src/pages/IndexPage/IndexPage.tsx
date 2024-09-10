@@ -49,7 +49,7 @@ export const IndexPage: FC = () => {
 
   const lastFruitLevel = fruitLevelNumbers[fruitLevelNumbers.length - 1];
 
-    console.log(isRegenerating)
+    console.log(main_fruit_stats, nextLevelTapsNeeded)
 
   const handleScreenTap = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if(energy <= 0) return
@@ -94,7 +94,24 @@ export const IndexPage: FC = () => {
     return () => clearTimeout(timeout);
   }, [boosting,per_tap]);
 
-  console.log(main_fruit)
+  useEffect(() => {
+    if(energy < max_energy) {
+      setIsRegenerating(true)
+    }
+  },[])
+
+  useEffect(() => {
+    if(boosting) {
+      dispatch(setBoostCooldown(true));
+      dispatch(setBoostingStatus(false));
+      setTimeout(() => {
+        dispatch(setBoostCooldown(false));
+      }, 10000);
+    }
+    if(boostCoolDown) {
+      dispatch(setBoostCooldown(false));
+    }
+  }, [main_fruit]);
 
   return (
     <Section>

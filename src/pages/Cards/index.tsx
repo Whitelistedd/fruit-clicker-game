@@ -1,4 +1,4 @@
-import {List, Section} from '@telegram-apps/telegram-ui';
+import {Section} from '@telegram-apps/telegram-ui';
 
 import {FC, useEffect, useState} from 'react';
 import styles from "@/pages/Cards/Cards.module.scss";
@@ -20,11 +20,17 @@ export const Cards: FC = () => {
     user_fruit_levels
   } = useAppSelector((state) => state.user);
   const [actionModalType, setActionModalType] = useState<{type: "purchase" | "activate", fruitId: number}>({type: "purchase", fruitId: 0})
+  const [errorModal, setErrorModal] = useState<string>("")
 
   const {data, refetch} = useGetFruitsQuery({})
     const dispatch = useAppDispatch()
 
     const handleBuyFruit = () => {
+        const newFruit = data?.find(fruit => fruit.id ==  actionModalType.fruitId) as fruitType
+        if(total_taps_counter <= newFruit.price) {
+            toggleBuyFruitModal()
+            return setErrorModal("You cant afford to Purchase this Fruit")
+        }
         const newUserFruitLevels = [...user_fruit_levels]
         newUserFruitLevels.push({
             created_at: "",
@@ -40,9 +46,8 @@ export const Cards: FC = () => {
     }
 
     const handleActivateFruit = () => {
-      if(!data) return
-      const newFruit = data.find(fruit => fruit.id ==  actionModalType.fruitId) as fruitType
-      dispatch(setMainFruit(newFruit))
+      const newFruit = data?.find(fruit => fruit.id ==  actionModalType.fruitId) as fruitType
+        if(newFruit) dispatch(setMainFruit(newFruit))
         toggleActivateFruitModal()
     }
 
@@ -54,21 +59,30 @@ export const Cards: FC = () => {
         setActionModalType({type:"activate", fruitId: fruitId || 0 })
     }
 
+    const toggleErrorModal = (error?: string) => {
+      setErrorModal(error || "")
+    }
+
     useEffect(() => {
         refetch()
     }, []);
 
   return (
-    <List>
         <Section>
+            <div className={styles.container}>
+            {errorModal &&
+                <ActionModal
+                    title={errorModal}
+                    onCancel={() => toggleErrorModal()}
+                />
+            }
             {Number(actionModalType.fruitId) > 0 &&
                 <ActionModal
                     title={actionModalType.type === "purchase" ? "Are you sure you want to Purchase this Fruit?" : "Are you sure you want to Activate this Fruit"}
-                    toggleModal={actionModalType.type === "purchase" ? toggleBuyFruitModal : toggleActivateFruitModal}
+                    onCancel={actionModalType.type === "purchase" ? toggleBuyFruitModal : toggleActivateFruitModal}
                     onSubmit={actionModalType.type === "purchase" ? handleBuyFruit : handleActivateFruit}
                 />
             }
-            <div className={styles.container}>
                 <div className={styles.wrap}>
                     <div className={styles.infoPills}>
                         <div className={styles.topInfo}>
@@ -93,8 +107,13 @@ export const Cards: FC = () => {
                     <div className={styles.cards}>
                         {
                             data?.map(fruit => {
+                                const typedFruit = fruit as fruitType
                                 const fruitUserStats = user_fruit_levels.find(fruitStats => fruitStats.fruit_id === fruit.id)
-                                const per_tap = fruit?.levels && (fruitUserStats?.level ? fruit.levels[fruitUserStats?.level as keyof typeof fruit.levels].taps_per_tap : fruit.levels[1].taps_per_tap)
+                                const per_tap = typedFruit?.levels &&
+                                    (fruitUserStats?.level
+                                        ?
+                                        typedFruit?.levels[fruitUserStats?.level as keyof typeof fruit.levels].taps_per_tap
+                                        : typedFruit.levels[1].taps_per_tap)
                                 return (
                                     <FruitCard
                                         fruitId={fruit.id}
@@ -121,6 +140,5 @@ export const Cards: FC = () => {
                 </div>
             </div>
         </Section>
-    </List>
   );
 };

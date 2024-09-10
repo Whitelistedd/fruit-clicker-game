@@ -19,6 +19,7 @@ import {useAppDispatch, useAppSelector} from "@/store";
 import {setInitialInfo} from "@/store/slices/user";
 import {useGetFruitsQuery} from "@/store/slices/fruits";
 import {Loading} from "@/components/Loading/Index.tsx";
+import {fruitType} from "@/store/slices/fruits/fruits.types.ts";
 
 export const App: FC = () => {
   const lp = useLaunchParams();
@@ -55,13 +56,13 @@ export const App: FC = () => {
     if(main_fruit) return setLoading(false)
     if(!data?.length) return
     const default_main_fruit_id = 1
-    const default_main_fruit = data?.find(fruit => fruit.id === default_main_fruit_id)
+    const default_main_fruit = data?.find(fruit => fruit.id === default_main_fruit_id) as fruitType
     console.log(default_main_fruit)
-    if(!default_main_fruit) return
+    if(!default_main_fruit || !default_main_fruit?.levels) return
     dispatch(setInitialInfo({
       boosting: false,
       energy: 100,
-      main_fruit: default_main_fruit,
+      main_fruit: default_main_fruit as fruitType,
       main_fruit_stats: {
         taps: 0,
         current: 0,
