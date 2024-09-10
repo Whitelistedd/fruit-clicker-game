@@ -6,11 +6,7 @@ const fruitsApi = createApi({
   endpoints: (builder) => ({
     getFruits: builder.query({
       queryFn: async () => {
-        const { data, error } = await supabase
-          .from("fruits")
-          .select("*")
-          .eq("done", false);
-
+        const { data, error } = await supabase.from("fruits").select("*");
         if (error) {
           throw { error };
         }

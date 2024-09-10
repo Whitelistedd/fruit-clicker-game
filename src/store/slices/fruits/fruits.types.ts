@@ -8,5 +8,6 @@ export type fruitType = {
     };
   } | null;
   name: string | null;
+  color: string;
   src: string | null;
 };
