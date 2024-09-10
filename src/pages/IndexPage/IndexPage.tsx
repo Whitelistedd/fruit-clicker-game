@@ -15,7 +15,6 @@ import {
 } from "@/store/slices/user";
 import { CapitalFirstLetter } from "@/helpers/CapitalFirstLetter";
 import { calculatePercentageDone } from "@/helpers/calculatePercentageDone";
-import Splash from "@/assets/svgs/Splash.tsx";
 import Dash from "@/assets/svgs/Dash.svg.tsx";
 
 export const IndexPage: FC = () => {
