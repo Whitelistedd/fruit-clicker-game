@@ -1,0 +1,40 @@
+@import "@/theme/colors.scss";
+
+.container {
+  position: fixed;
+  z-index: 10000;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #00000090;
+
+  .wrap {
+    background: $darkPurple;
+    border-radius: 15px;
+    padding: 20px;
+    max-width: 300px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .buttons {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .cancelBtn {
+    flex: 1;
+  }
+
+  .submitBtn {
+    flex: 1;
+    border: 2px solid $danger;
+    background: none;
+    color: $danger;
+  }
+}

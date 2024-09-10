@@ -1,0 +1,78 @@
+@import "@/theme/colors.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: flex-end;
+  gap: 10px;
+  background-color: $darkPurple;
+  border-radius: 15px;
+  overflow: hidden;
+  padding: 10px 15px;
+  position: relative;
+
+  .level, .perHour, .fruitName, .purchase {
+    display: flex;
+    align-items: center;
+    width: 50%;
+
+  }
+
+  .level {
+    font-size: 0.75rem;
+  }
+
+  .fruitName {
+    font-weight: 700;
+  }
+
+  .fruitImg {
+    position: absolute;
+    left: -40px;
+    bottom: -30px;
+    filter: drop-shadow(5px 0px 10px rgba(255,255,255,0.3));
+  }
+
+  .fruitSplash {
+    position: absolute;
+    top: -70px;
+    left: -70px;
+  }
+
+  .perHour {
+    color: $wb1;
+    display: flex;
+    gap: 2px;
+    font-size: 0.75rem;
+    svg {
+      width: 10px;
+      height: 10px;
+    }
+  }
+
+  .level, .purchase {
+    justify-content: flex-end;
+  }
+
+  .purchase {
+    display: flex;
+    gap: 2px;
+    color: $yellow;
+    font-weight: 700;
+    svg {
+      width: 16px;
+      height: 15px;
+    }
+  }
+
+  .perHour {
+
+  }
+}
+
+.clickable {
+  &:hover {
+    cursor: pointer;
+  }
+}

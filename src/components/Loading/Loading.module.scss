@@ -1,0 +1,28 @@
+@import "@/theme/colors.scss";
+@import "@/components/InfoPill/InfoPill.module";
+
+@keyframes infiniteRotation {
+  0% {transform: rotate(0deg)}
+  50% {transform: rotate(360deg)}
+  100% {transform: rotate(720deg)}
+}
+
+.container {
+  background-color: $bg;
+  min-height: 100vh;
+  padding: 20px 20px 100px 20px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+
+  .fruitImage {
+    width: 100px;
+    height: 100px;
+    animation-name: infiniteRotation;
+    animation-iteration-count: infinite;
+    animation-duration: 1200ms;
+    animation-delay: 0ms;
+    animation-timing-function: ease;
+  }
+}
