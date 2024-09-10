@@ -1,5 +1,4 @@
 import { Cards } from '@/pages/Cards';
-import { Earn } from '@/pages/Earn';
 import { Friends } from '@/pages/Friends';
 import { IndexPage } from '@/pages/IndexPage/IndexPage';
 
@@ -15,6 +14,5 @@ interface Route {
 export const routes: Route[] = [
   { path: '/', Component: IndexPage },
   { path: '/cards', Component: Cards, title: 'Cards' },
-  { path: '/earn', Component: Earn, title: 'Earn' },
   { path: '/Friends', Component: Friends, title: 'Friends' },
 ];

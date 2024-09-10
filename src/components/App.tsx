@@ -1,5 +1,5 @@
-import { routes } from '@/navigation/routes.tsx';
-import { useIntegration } from '@telegram-apps/react-router-integration';
+import { routes } from "@/navigation/routes.tsx";
+import { useIntegration } from "@telegram-apps/react-router-integration";
 import {
   bindMiniAppCSSVars,
   bindThemeParamsCSSVars,
@@ -9,18 +9,26 @@ import {
   useMiniApp,
   useThemeParams,
   useViewport,
-} from '@telegram-apps/sdk-react';
-import { AppRoot } from '@telegram-apps/telegram-ui';
-import { FC, type, useEffect, useMemo } from 'react';
-import { Navigate, Route, Router, Routes } from 'react-router-dom';
+} from "@telegram-apps/sdk-react";
+import { AppRoot } from "@telegram-apps/telegram-ui";
+import {FC, useEffect, useMemo, useState} from "react";
+import { Navigate, Route, Router, Routes } from "react-router-dom";
 
-import { BottomNavMenu } from './BottomNavMenu';
+import { BottomNavMenu } from "./BottomNavMenu";
+import {useAppDispatch, useAppSelector} from "@/store";
+import {setInitialInfo} from "@/store/slices/user";
+import {useGetFruitsQuery} from "@/store/slices/fruits";
+import {Loading} from "@/components/Loading/Index.tsx";
 
 export const App: FC = () => {
   const lp = useLaunchParams();
   const miniApp = useMiniApp();
   const themeParams = useThemeParams();
   const viewport = useViewport();
+  const dispatch = useAppDispatch();
+  const [loading,setLoading] = useState(true)
+  const {main_fruit} = useAppSelector(state => state.user)
+  const {data} = useGetFruitsQuery({})
 
   useEffect(() => {
     return bindMiniAppCSSVars(miniApp, themeParams);
@@ -34,29 +42,69 @@ export const App: FC = () => {
     return viewport && bindViewportCSSVars(viewport);
   }, [viewport]);
 
-  // Create a new application navigator and attach it to the browser history, so it could modify
-  // it and listen to its changes.
-  const navigator = useMemo(() => initNavigator('app-navigation-state'), []);
+  const navigator = useMemo(() => initNavigator("app-navigation-state"), []);
   const [location, reactNavigator] = useIntegration(navigator);
 
-  // Don't forget to attach the navigator to allow it to control the BackButton state as well
-  // as browser history.
   useEffect(() => {
     navigator.attach();
     return () => navigator.detach();
   }, [navigator]);
 
+  useEffect(() => {
+    console.log(main_fruit,data,"main_fruit")
+    if(main_fruit) return setLoading(false)
+    if(!data?.length) return
+    const default_main_fruit_id = 1
+    const default_main_fruit = data?.find(fruit => fruit.id === default_main_fruit_id)
+    console.log(default_main_fruit)
+    if(!default_main_fruit) return
+    dispatch(setInitialInfo({
+      boosting: false,
+      energy: 100,
+      main_fruit: default_main_fruit,
+      main_fruit_stats: {
+        taps: 0,
+        current: 0,
+        level: 1,
+        unlocked: true,
+        fruit_id: default_main_fruit_id,
+        created_at: "",
+        user_id: "",
+      },
+      max_energy: 100,
+      per_tap: default_main_fruit?.levels[1].taps_per_tap,
+      total_taps_counter: 0,
+      user_fruit_levels: [{
+        created_at: "",
+        current: 0,
+        fruit_id: default_main_fruit_id,
+        level: 1,
+        taps: 0,
+        unlocked: true,
+        user_id: ""
+      }],
+      boostCoolDown: false,
+      created_at: "",
+      id: ""
+    }))
+    setLoading(false)
+  },[data])
+
+  if(loading) return <Loading />
+
   return (
     <AppRoot
-      appearance={miniApp.isDark ? 'dark' : 'light'}
-      platform={['macos', 'ios'].includes(lp.platform) ? 'ios' : 'base'}
+      appearance={miniApp.isDark ? "dark" : "light"}
+      platform={["macos", "ios"].includes(lp.platform) ? "ios" : "base"}
     >
       <Router location={location} navigator={reactNavigator}>
         <Routes>
-          {routes.map((route) => <Route key={route.path} {...route} />)}
-          <Route path='*' element={<Navigate to='/'/>}/>
+          {routes.map((route) => (
+            <Route key={route.path} {...route} />
+          ))}
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
-          <BottomNavMenu />
+        <BottomNavMenu />
       </Router>
     </AppRoot>
   );

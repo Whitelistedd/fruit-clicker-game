@@ -5,7 +5,10 @@ import { type FC, useEffect, useMemo } from "react";
 import { App } from "@/components/App.tsx";
 import { ErrorBoundary } from "@/components/ErrorBoundary.tsx";
 import { Provider } from "react-redux";
-import { store } from "@/store";
+import { store,persistor } from "@/store";
+import { PersistGate } from 'redux-persist/integration/react';
+import {Loading} from "@/components/Loading/Index.tsx";
+
 
 const ErrorBoundaryError: FC<{ error: unknown }> = ({ error }) => (
   <div>
@@ -39,7 +42,9 @@ const Inner: FC = () => {
     <TonConnectUIProvider manifestUrl={manifestUrl}>
       <SDKProvider acceptCustomStyles debug={debug}>
         <Provider store={store}>
-          <App />
+            <PersistGate loading={<Loading />} persistor={persistor}>
+                <App />
+            </PersistGate>
         </Provider>
       </SDKProvider>
     </TonConnectUIProvider>
