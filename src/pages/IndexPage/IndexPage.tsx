@@ -52,7 +52,7 @@ export const IndexPage: FC = () => {
     isRegenerating.current = false;
     clicksRef.current = { x: e.pageX, y: e.pageY };
     per_tap && setTapCombo((prev) => prev + per_tap);
-    dispatch(handleTap());
+    // dispatch(handleTap());
     timeoutId && clearTimeout(timeoutId);
     const newTimeoutId = setTimeout(() => {
       setTapCombo(0);
