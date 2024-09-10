@@ -191,14 +191,18 @@ export const IndexPage: FC = () => {
             </div>
           </div>
           <div className={styles.fruitContainer} onClickCapture={(e) => handleScreenTap(e)}>
-            {main_fruit?.color && <Splash className={styles.fruitSplash} color={main_fruit?.color}/>}
-            <img
-              className={styles.mainFruitImage}
-              alt="fruit image to click"
-              src={"https://i.ibb.co/2PqKs2D/te-1.webp"}
-              fetchPriority={"high"}
-              loading={"lazy"}
-            />
+            {/*{main_fruit?.color && <Splash className={styles.fruitSplash} color={main_fruit?.color}/>}*/}
+            <div className={styles.mainFruitImage}>
+
+            </div>
+
+            {/*<img*/}
+            {/*  className={styles.mainFruitImage}*/}
+            {/*  alt="fruit image to click"*/}
+            {/*  src={"https://i.ibb.co/2PqKs2D/te-1.webp"}*/}
+            {/*  fetchPriority={"high"}*/}
+            {/*  loading={"lazy"}*/}
+            {/*/>*/}
           </div>
             <div
               style={{
