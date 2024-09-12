@@ -95,18 +95,18 @@ export const IndexPage: FC = () => {
   //   }
   // },[])
   //
-  // useEffect(() => {
-  //   if(boosting) {
-  //     dispatch(setBoostCooldown(true));
-  //     dispatch(setBoostingStatus(false));
-  //     setTimeout(() => {
-  //       dispatch(setBoostCooldown(false));
-  //     }, 10000);
-  //   }
-  //   if(boostCoolDown) {
-  //     dispatch(setBoostCooldown(false));
-  //   }
-  // }, [main_fruit]);
+  useEffect(() => {
+    if(boosting) {
+      dispatch(setBoostCooldown(true));
+      dispatch(setBoostingStatus(false));
+      setTimeout(() => {
+        dispatch(setBoostCooldown(false));
+      }, 10000);
+    }
+    if(boostCoolDown) {
+      dispatch(setBoostCooldown(false));
+    }
+  }, [main_fruit]);
 
   return (
     <Section>
@@ -168,6 +168,7 @@ export const IndexPage: FC = () => {
                   src={fruitImg}
                   width={90}
                   height={101}
+                  fetchPriority={"low"}
                 />
                 <img
                   className={styles.fruitPillImgRight}
@@ -175,6 +176,7 @@ export const IndexPage: FC = () => {
                   src={fruitImg}
                   width={90}
                   height={101}
+                  fetchPriority={"low"}
                 />
               </InfoPill>
               <InfoPill
@@ -196,9 +198,8 @@ export const IndexPage: FC = () => {
             <img
               className={styles.mainFruitImage}
               alt="fruit image to click"
-              src={"https://i.ibb.co/2PqKs2D/te-1.webp"}
+              src={"https://i.imgur.com/YFl6XCw.png"}
               fetchPriority={"high"}
-              loading={"lazy"}
             />
           </div>
             <div
