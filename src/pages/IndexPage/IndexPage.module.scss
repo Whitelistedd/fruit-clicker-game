@@ -8,30 +8,30 @@
   align-items: center;
   overflow: hidden;
   position: relative;
-
-  &::before {
-    content: "";
-    position: absolute;
-    width: 283.33px;
-    height: 415.32px;
-    left: calc(50% - 283.33px / 2 - 161.34px);
-    top: calc(50% - 415.32px / 2 - 186.95px);
-    background: #4a1174;
-    filter: blur(150px);
-    transform: rotate(-10.86deg);
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    width: 249px;
-    height: 365px;
-    left: calc(50% - 249px / 2 + 99.5px);
-    top: calc(50% - 365px / 2 + 332.43px);
-    background: #4a1174;
-    filter: blur(150px);
-    transform: rotate(-10.86deg);
-  }
+  //
+  //&::before {
+  //  content: "";
+  //  position: absolute;
+  //  width: 283.33px;
+  //  height: 415.32px;
+  //  left: calc(50% - 283.33px / 2 - 161.34px);
+  //  top: calc(50% - 415.32px / 2 - 186.95px);
+  //  background: #4a1174;
+  //  filter: blur(150px);
+  //  transform: rotate(-10.86deg);
+  //}
+  //
+  //&::after {
+  //  content: "";
+  //  position: absolute;
+  //  width: 249px;
+  //  height: 365px;
+  //  left: calc(50% - 249px / 2 + 99.5px);
+  //  top: calc(50% - 365px / 2 + 332.43px);
+  //  background: #4a1174;
+  //  filter: blur(150px);
+  //  transform: rotate(-10.86deg);
+  //}
 
   .wrap {
     max-width: 450px;
