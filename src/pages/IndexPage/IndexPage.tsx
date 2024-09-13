@@ -8,6 +8,7 @@ import { InfoPill } from "@/components/InfoPill";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { formatNumber } from "@/helpers/formatNumber";
 import {
+  handleTap,
   setBoostCooldown,
   setBoostingStatus, setEnergy,
   setPerTap,
@@ -57,7 +58,7 @@ export const IndexPage: FC = () => {
     setIsRegenerating(false)
     setClickPosition({ x: e.pageX, y: e.pageY });
     per_tap && setTapCombo((prev) => prev + per_tap);
-    // dispatch(handleTap());
+    dispatch(handleTap());
     timeoutId && clearTimeout(timeoutId);
     const newTimeoutId = setTimeout(() => {
       setTapCombo(0);
@@ -216,7 +217,7 @@ export const IndexPage: FC = () => {
               }}
               className={styles.ComboTapCounter}
             >
-              +{tapCombo}
+              {tapCombo ? `+${tapCombo}` :  ''}
             </div>
         </div>
       </div>
