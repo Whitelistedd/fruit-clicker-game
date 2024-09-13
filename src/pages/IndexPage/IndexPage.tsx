@@ -3,11 +3,12 @@ import Coin from "@/assets/svgs/Coin.svg?react";
 
 import styles from "./IndexPage.module.scss";
 
-import React, {useMemo, useState, type FC, useRef, useEffect} from "react";
+import React, {useMemo, useState, type FC, useEffect} from "react";
 import { InfoPill } from "@/components/InfoPill";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { formatNumber } from "@/helpers/formatNumber";
 import {
+  setBoostCooldown,
   setBoostingStatus, setEnergy,
   setPerTap,
 } from "@/store/slices/user";
@@ -28,34 +29,39 @@ export const IndexPage: FC = () => {
   } = useAppSelector((state) => state.user);
 
   const dispatch = useAppDispatch();
-  const clicksRef = useRef({ x: 0, y: 0 });
-  const isRegenerating = useRef(false)
+  const [clickPosition, setClickPosition] = useState({x: 0, y: 0})
   const [tapCombo, setTapCombo] = useState(0);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const [isRegenerating, setIsRegenerating] = useState(false)
   const fruitImg = `${main_fruit?.src}`;
 
-  const nextLevelTapsNeeded =
-    main_fruit?.levels &&
-    main_fruit_stats?.level &&
-    main_fruit?.levels[main_fruit_stats?.level + 1]?.taps_needed;
+  const nextLevelTapsNeeded = useMemo(() =>
+      main_fruit?.levels &&
+      main_fruit_stats?.level &&
+      main_fruit?.levels[main_fruit_stats?.level + 1]?.taps_needed
+    ,[main_fruit, main_fruit_stats]
+  )
 
   const fruitLevelNumbers = useMemo(
     () => (main_fruit?.levels ? Object.keys(main_fruit?.levels) : []),
     [main_fruit?.levels]
   );
 
-  const lastFruitLevel = fruitLevelNumbers[fruitLevelNumbers.length - 1];
-  console.log(clicksRef)
+  const lastFruitLevel = useMemo(() =>
+      fruitLevelNumbers[fruitLevelNumbers.length - 1],
+      [fruitLevelNumbers]
+  )
+
   const handleScreenTap = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if(energy <= 0) return
-    isRegenerating.current = false;
-    clicksRef.current = { x: e.pageX, y: e.pageY };
+    setIsRegenerating(false)
+    setClickPosition({ x: e.pageX, y: e.pageY });
     per_tap && setTapCombo((prev) => prev + per_tap);
     // dispatch(handleTap());
     timeoutId && clearTimeout(timeoutId);
     const newTimeoutId = setTimeout(() => {
       setTapCombo(0);
-      isRegenerating.current = true;
+      setIsRegenerating(true);
     }, 1000);
     setTimeoutId(newTimeoutId);
   };
@@ -74,27 +80,27 @@ export const IndexPage: FC = () => {
 
     return () => clearInterval(interval);
   }, [isRegenerating,energy]);
-  //
-  // useEffect(() => {
-  //   if (!boosting || !per_tap) return;
-  //   const timeout = setTimeout(() => {
-  //     dispatch(setPerTap(per_tap / 2));
-  //     dispatch(setBoostCooldown(true));
-  //     dispatch(setBoostingStatus(false));
-  //     setTimeout(() => {
-  //       dispatch(setBoostCooldown(false));
-  //     }, 10000);
-  //   }, 5000);
-  //
-  //   return () => clearTimeout(timeout);
-  // }, [boosting,per_tap]);
-  //
-  // useEffect(() => {
-  //   if(energy < max_energy) {
-  //     setIsRegenerating(true)
-  //   }
-  // },[])
-  //
+
+  useEffect(() => {
+    if (!boosting || !per_tap) return;
+    const timeout = setTimeout(() => {
+      dispatch(setPerTap(per_tap / 2));
+      dispatch(setBoostCooldown(true));
+      dispatch(setBoostingStatus(false));
+      setTimeout(() => {
+        dispatch(setBoostCooldown(false));
+      }, 10000);
+    }, 5000);
+
+    return () => clearTimeout(timeout);
+  }, [boosting,per_tap]);
+
+  useEffect(() => {
+    if(energy < max_energy) {
+      setIsRegenerating(true)
+    }
+  },[])
+
   useEffect(() => {
     if(boosting) {
       dispatch(setBoostCooldown(true));
@@ -204,8 +210,8 @@ export const IndexPage: FC = () => {
           </div>
             <div
               style={{
-                top: clicksRef.current.y - 64,
-                left: clicksRef.current.x - 86.5,
+                top: clickPosition.y - 64,
+                left: clickPosition.x - 86.5,
                 opacity: tapCombo ? 1 : 0,
               }}
               className={styles.ComboTapCounter}
