@@ -12,7 +12,7 @@ import {
 } from "@telegram-apps/sdk-react";
 import { AppRoot } from "@telegram-apps/telegram-ui";
 import {FC, useEffect, useMemo, useState} from "react";
-import { Navigate, Route, Router, Routes } from "react-router-dom";
+import { Route, Router, Routes } from "react-router-dom";
 
 import { BottomNavMenu } from "./BottomNavMenu";
 import {useAppDispatch, useAppSelector} from "@/store";
