@@ -7,7 +7,7 @@ import {
 } from "@reduxjs/toolkit";
 import { UserState } from "./userSlice.types";
 import { RootState } from "@/store";
-import { fruitType } from "@/store/slices/fruits/fruits.types.ts";
+import { fruitType, fruitTypeDB } from "@/store/slices/fruits/fruits.types.ts";
 
 const initialState: UserState = {
   boosting: false, // if the user is boosting currently
@@ -39,6 +39,7 @@ const initialState: UserState = {
       user_id: "",
     },
   ], // all user's fruit stats
+  loading: false,
 };
 
 export const userSlice = createSlice({
@@ -116,6 +117,9 @@ export const userSlice = createSlice({
     setUserFruitLevels: (state, payload) => {
       state.user_fruit_levels = payload.payload;
     },
+    setLoading: (state, { payload }) => {
+      state.loading = payload;
+    },
   },
 });
 
@@ -130,6 +134,7 @@ export const {
   setMainFruitTaps,
   setBoostCooldown,
   setBoostingStatus,
+  setLoading,
   setPerTap,
 } = userSlice.actions;
 
@@ -188,6 +193,55 @@ export const handleTap =
 
     // increase level and reset current amount of taps
     increaseLevel();
+  };
+
+export const generateInitialInfo =
+  (
+    fruits: fruitTypeDB[]
+  ): ThunkAction<void, RootState, unknown, UnknownAction> =>
+  async (dispatch, getState) => {
+    const { main_fruit } = getState().user;
+    if (main_fruit) return setLoading(false);
+    if (!fruits?.length) return;
+    const default_main_fruit_id = 1;
+    const default_main_fruit = fruits?.find(
+      (fruit) => fruit.id === default_main_fruit_id
+    ) as fruitType;
+    if (!default_main_fruit || !default_main_fruit?.levels) return;
+    dispatch(
+      setInitialInfo({
+        boosting: false,
+        energy: 100,
+        main_fruit: default_main_fruit as fruitType,
+        main_fruit_stats: {
+          taps: 0,
+          current: 0,
+          level: 1,
+          unlocked: true,
+          fruit_id: default_main_fruit_id,
+          created_at: "",
+          user_id: "",
+        },
+        max_energy: 100,
+        per_tap: default_main_fruit?.levels[1].taps_per_tap,
+        total_taps_counter: 0,
+        user_fruit_levels: [
+          {
+            created_at: "",
+            current: 0,
+            fruit_id: default_main_fruit_id,
+            level: 1,
+            taps: 0,
+            unlocked: true,
+            user_id: "",
+          },
+        ],
+        boostCoolDown: false,
+        created_at: "",
+        id: "",
+        loading: false,
+      })
+    );
   };
 
 export default userSlice.reducer;

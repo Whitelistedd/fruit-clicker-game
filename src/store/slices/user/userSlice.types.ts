@@ -17,4 +17,5 @@ export type UserState = {
   user_fruit_levels: Array<
     Database["public"]["Tables"]["user_fruit_levels"]["Row"]
   >;
+  loading: boolean;
 };

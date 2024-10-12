@@ -1,3 +1,5 @@
+import { Database } from "@/database.types";
+
 export type fruitType = {
   created_at: string;
   id: number;
@@ -12,3 +14,5 @@ export type fruitType = {
   src: string | null;
   price: number;
 };
+
+export type fruitTypeDB = Database["public"]["Tables"]["fruits"]["Row"];
